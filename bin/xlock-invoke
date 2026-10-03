@@ -1,0 +1,85 @@
+#!/bin/sh
+############################################################ LICENSE
+#
+# Copyright (c) 2026 Devin Teske <dteske@FreeBSD.org>
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
+############################################################ IDENT(1)
+#
+# $Title: Run xlock as Lock Screen or Lock Desktop $
+# $Copyright: 2026 Devin Teske. All rights reserved. $
+# $FrauBSD: bhotkeys-lock/bin/xlock-invoke 2026-10-04 07:53:53 -0700 Devin Teske $
+#
+############################################################ INFORMATION
+#
+# Lock Screen and Lock Desktop share one xlock binary and must
+# not share flags. Picom classifies the two WM_CLASS instances.
+# xlock-run adds a black underlay for Lock Screen only, and
+# keeps it restacked for the whole lock. Otherwise random-mode
+# window churn leaks the desktop.
+#
+############################################################ ENVIRONMENT
+
+DISPLAY="${DISPLAY:-:0}"
+export DISPLAY
+
+XLOCK="${XLOCK:-xlock}"
+RUN="${XLOCK_RUN:-xlock-run}"
+
+############################################################ GLOBALS
+
+pgm="${0##*/}" # Program basename
+
+############################################################ FUNCTIONS
+
+have() { command -v "$@" > /dev/null 2>&1; }
+
+die()
+{
+	local fmt="$1"
+	if [ "$fmt" ]; then
+		shift 1 # fmt
+		printf "%s: $fmt\n" "$pgm" "$@" >&2
+	fi
+	exit 1
+}
+
+usage()
+{
+	echo "Usage: $pgm xlock-screen|xlock-desktop [xlock-args]" >&2
+	exit 2
+}
+
+############################################################ MAIN
+
+set -e # errexit
+
+CLASS="$1"
+[ "$CLASS" ] || usage
+shift 1 # class
+
+have "$RUN" || die "%s not found" "$RUN"
+
+case "$CLASS" in
+xlock-screen)
+	# Opaque: no embedded screenshot; black underlay from xlock-run
+	exec "$RUN" "$CLASS" "$XLOCK" -hide -background black \
+		-mode random "$@"
+	;;
+xlock-desktop)
+	# Sheer: +hide captures the session for translucency over it
+	# Without picom, fall back to the same opaque path as Lock Screen
+	if pgrep -qx picom; then
+		exec "$RUN" "$CLASS" "$XLOCK" +hide -mode random "$@"
+	fi
+	exec "$RUN" xlock-screen "$XLOCK" -hide -background black \
+		-mode random "$@"
+	;;
+*)
+	usage # NOTREACHED
+esac
+
+################################################################################
+# END
+################################################################################

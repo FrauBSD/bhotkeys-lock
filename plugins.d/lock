@@ -1,0 +1,9 @@
+id lock
+group x11/bhotkeys-lock
+label Lock screen
+chord Super+l
+enabled 0 gnome
+command xlock-screen
+repeat 0
+greeter 0
+desc Lock the session.
