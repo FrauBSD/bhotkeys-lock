@@ -1,0 +1,84 @@
+.\" Copyright (c) 2026 Devin Teske <dteske@FreeBSD.org>
+.\"
+.\" SPDX-License-Identifier: BSD-2-Clause
+.\"
+.Dd October 4, 2026
+.Dt XLOCK-INVOKE 1
+.Os
+.Sh NAME
+.Nm xlock-invoke
+.Nd run xlock as Lock Screen or Lock Desktop
+.Sh SYNOPSIS
+.Nm Cm xlock-screen
+.Op Ar xlock-args
+.Nm Cm xlock-desktop
+.Op Ar xlock-args
+.Sh DESCRIPTION
+.Nm
+runs
+.Xr xlock-run 1
+with one window-manager class and the flags that class needs.
+The two classes must not share flags.
+.Cm xlock-screen
+is opaque.
+It passes
+.Fl hide ,
+.Fl background Cm black ,
+and
+.Fl mode Cm random
+to
+.Xr xlock 1 .
+.Xr xlock-run 1
+keeps a black underlay behind that class for the whole lock.
+.Pp
+.Cm xlock-desktop
+is sheer when
+.Xr picom 1
+is running.
+It passes
+.Cm +hide
+and
+.Fl mode Cm random ,
+so the saver can show the session through it.
+When picom is not running, the same opaque path as
+.Cm xlock-screen
+is used, including that class name.
+.Pp
+.Ar xlock-args
+are appended after those flags.
+.Sh ENVIRONMENT
+.Bl -tag -width "XLOCK_RUN"
+.It Ev DISPLAY
+X server.
+The default is
+.Pa :0 .
+.It Ev XLOCK
+.Xr xlock 1
+binary.
+The default is
+.Nm xlock
+in
+.Ev PATH .
+.It Ev XLOCK_RUN
+.Xr xlock-run 1
+binary.
+The default is
+.Nm xlock-run
+in
+.Ev PATH .
+.El
+.Sh EXIT STATUS
+.Nm
+exits 1 when
+.Nm xlock-run
+is not found.
+A missing or unknown class exits 2.
+Otherwise the exit status is that of
+.Xr xlock-run 1 .
+.Sh SEE ALSO
+.Xr picom 1 ,
+.Xr xlock 1 ,
+.Xr xlock-run 1 ,
+.Xr xlock-screen 1
+.Sh AUTHORS
+.An Devin Teske Aq Mt dteske@FreeBSD.org

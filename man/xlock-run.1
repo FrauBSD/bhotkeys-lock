@@ -1,0 +1,52 @@
+.\" Copyright (c) 2026 Devin Teske <dteske@FreeBSD.org>
+.\"
+.\" SPDX-License-Identifier: BSD-2-Clause
+.\"
+.Dd October 4, 2026
+.Dt XLOCK-RUN 1
+.Os
+.Sh NAME
+.Nm xlock-run
+.Nd run xlock under a chosen WM_CLASS
+.Sh SYNOPSIS
+.Nm Ar class Ar xlock
+.Op Ar args
+.Sh DESCRIPTION
+.Nm
+runs
+.Ar xlock
+with
+.Ar args
+and sets the locker window's
+.Ev WM_CLASS
+instance to
+.Ar class
+and its class to
+.Cm xlock .
+.Pp
+.Ar class
+.Cm xlock-screen
+is kept opaque.
+A black underlay covers the screen and is restacked under the
+saver for the whole lock, so a random mode that opens and closes
+windows cannot show the desktop.
+The saver's opacity property is set fully opaque.
+.Pp
+Any other
+.Ar class ,
+including
+.Cm xlock-desktop ,
+gets no underlay, and the opacity property is removed so a
+compositor can show the session through the saver.
+.Sh EXIT STATUS
+.Nm
+exits non-zero when the display cannot be opened or the arguments
+are missing.
+Otherwise it exits with the status of
+.Ar xlock .
+.Sh SEE ALSO
+.Xr xlock 1 ,
+.Xr xlock-invoke 1 ,
+.Xr xlock-screen 1
+.Sh AUTHORS
+.An Devin Teske Aq Mt dteske@FreeBSD.org

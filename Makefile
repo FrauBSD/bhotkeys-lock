@@ -8,13 +8,14 @@
 #
 # $Title: bhotkeys-lock - Super+L xlock-screen $
 # $Copyright: 2026 Devin Teske. All rights reserved. $
-# $FrauBSD: bhotkeys-lock/Makefile 2026-10-04 07:53:53 -0700 Devin Teske $
+# $FrauBSD: bhotkeys-lock/Makefile 2026-10-05 12:31:48 -0700 Devin Teske $
 #
 ############################################################ PATHS
 
 PREFIX?=	/usr/local
 BINDIR?=	${PREFIX}/bin
 PLUGDIR?=	${PREFIX}/share/bhotkeys/plugins.d
+MANDIR?=	${PREFIX}/share/man/man1
 
 ############################################################ PKG-CONFIG
 
@@ -32,6 +33,7 @@ CFLAGS?=	-O2 -Wall -Wextra
 
 BIN=		bin/xlock-screen bin/xlock-invoke bin/xlock-run
 PLUG=		plugins.d/lock
+MAN1=		xlock-screen xlock-invoke xlock-run
 
 ############################################################ TARGETS
 
@@ -45,9 +47,14 @@ bin/xlock-run: src/xlock-run.c
 .PHONY: install
 
 install: all
-	mkdir -p ${DESTDIR}${BINDIR} ${DESTDIR}${PLUGDIR}
+	mkdir -p ${DESTDIR}${BINDIR} ${DESTDIR}${PLUGDIR} \
+	    ${DESTDIR}${MANDIR}
 	install -m 755 ${BIN} ${DESTDIR}${BINDIR}
 	install -m 644 ${PLUG} ${DESTDIR}${PLUGDIR}/lock
+.for m in ${MAN1}
+	gzip -cn man/${m}.1 > ${DESTDIR}${MANDIR}/${m}.1.gz
+	chmod 444 ${DESTDIR}${MANDIR}/${m}.1.gz
+.endfor
 
 .PHONY: clean
 
