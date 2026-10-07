@@ -9,7 +9,7 @@
 #
 # $Title: Run xlock as Lock Screen or Lock Desktop $
 # $Copyright: 2026 Devin Teske. All rights reserved. $
-# $FrauBSD: bhotkeys-lock/bin/xlock-invoke 2026-10-04 07:53:53 -0700 Devin Teske $
+# $FrauBSD: bhotkeys-lock/bin/xlock-invoke 2026-10-06 18:53:43 -0700 Devin Teske $
 #
 ############################################################ INFORMATION
 #
@@ -47,7 +47,11 @@ die()
 
 usage()
 {
-	echo "Usage: $pgm xlock-screen|xlock-desktop [xlock-args]" >&2
+	exec >&2
+	case "$pgm" in
+	xlock-screen|xlock-desktop) echo "Usage: $pgm [xlock-args]" ;;
+	*) echo "Usage: $pgm xlock-screen|xlock-desktop [xlock-args]"
+	esac
 	exit 2
 }
 
@@ -55,9 +59,13 @@ usage()
 
 set -e # errexit
 
-CLASS="$1"
-[ "$CLASS" ] || usage
-shift 1 # class
+case "$pgm" in
+xlock-screen|xlock-desktop) CLASS="$pgm" ;;
+*)
+	CLASS="$1"
+	[ "$CLASS" ] || usage # NOTREACHED
+	shift 1 # class
+esac
 
 have "$RUN" || die "%s not found" "$RUN"
 

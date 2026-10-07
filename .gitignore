@@ -1,1 +1,3 @@
 bin/xlock-run
+bin/xlock-screen
+bin/xlock-desktop

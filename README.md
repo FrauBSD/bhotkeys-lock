@@ -1,12 +1,13 @@
-[//]: # ($FrauBSD: bhotkeys-lock/README.md 2026-10-04 08:06:24 -0700 Devin Teske $)
+[//]: # ($FrauBSD: bhotkeys-lock/README.md 2026-10-06 18:53:43 -0700 Devin Teske $)
 
 # bhotkeys-lock
 
 `Super+L` locks the screen.
 
 One [bhotkeys](https://github.com/FrauBSD/bhotkeys) plugin. This
-package ships `xlock-screen`, `xlock-invoke`, and `xlock-run`.
-`xlock-screen` asks `xlock-invoke` to run `xlock` as Lock Screen.
+package ships `xlock-invoke` and `xlock-run`. `xlock-screen` and
+`xlock-desktop` are names for `xlock-invoke`. The name selects
+Lock Screen or Lock Desktop.
 `xlock-run` sets the window class and keeps a black underlay under
 that lock so a random saver cannot leak the desktop. The plugin's
 id is `lock`, which the chord list treats specially: the overlay
@@ -47,8 +48,9 @@ class, forces full opacity, and keeps a black underlay beneath
 make install    # PREFIX=/usr/local by default
 ```
 
-Installs `xlock-screen`, `xlock-invoke`, and `xlock-run` into
-`${PREFIX}/bin`, and `lock` into `${PREFIX}/share/bhotkeys/plugins.d`.
+Installs `xlock-invoke` and `xlock-run` into `${PREFIX}/bin`.
+`xlock-screen` and `xlock-desktop` are links to `xlock-invoke`.
+`lock` goes into `${PREFIX}/share/bhotkeys/plugins.d`.
 
 ## Plugin
 

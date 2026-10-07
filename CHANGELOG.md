@@ -1,10 +1,15 @@
-[//]: # ($FrauBSD: bhotkeys-lock/CHANGELOG.md 2026-10-05 12:31:48 -0700 Devin Teske $)
+[//]: # ($FrauBSD: bhotkeys-lock/CHANGELOG.md 2026-10-06 18:53:43 -0700 Devin Teske $)
 
 # Changelog
 
 Newest first. Each section is a git tag; the bullets are what landed
 in that tag (from the previous tag, or from the start of the
 repository for 1.0).
+
+## 1.2 (2026-10-06)
+
+- `xlock-screen` and `xlock-desktop` are links to `xlock-invoke`
+- the invocation name selects Lock Screen or Lock Desktop
 
 ## 1.1 (2026-10-04)
 
